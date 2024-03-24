@@ -8,10 +8,12 @@ import { OptimismGovernorV4_0x8518Abi } from "./abis/OptimismGovernorV4_0x8518Ab
 import { OptimismGovernorV5_0x160bAbi } from "./abis/OptimismGovernorV5_0x160bAbi";
 import { OptimismGovernorV6_0x0c01Abi } from "./abis/OptimismGovernorV6_0x0c01Abi";
 import { GovernanceTokenAbi } from "./abis/GovernanceTokenAbi";
+import { ReverseRegistrarAbi } from "./abis/ReverseRegistrarAbi"
 
 export default createConfig({
   networks: {
-    optimism: { chainId: 10, transport: http(process.env.PONDER_RPC_URL_10) },
+    mainnet: { chainId: 1, transport: http(process.env.PONDER_RPC_URL_1) },
+		optimism: { chainId: 10, transport: http(process.env.PONDER_RPC_URL_10) },
   },
   contracts: {
     OptimismGovernorV6: {
@@ -32,6 +34,12 @@ export default createConfig({
 			address: "0x4200000000000000000000000000000000000042",
 			network: "optimism",
 			startBlock: 1, // CHANGE START BLOCK
+		},
+		ReverseRegistrar: {
+			abi: ReverseRegistrarAbi,
+			address: "0xa58E81fe9b61B5c3fE2AFD33CF304c454AbFc7Cb",
+			network: "mainnet",
+			startBlock: 1,
 		},
   },
 });
