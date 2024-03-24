@@ -7,6 +7,7 @@ import { OptimismGovernorV2_0x0457Abi } from "./abis/OptimismGovernorV2_0x0457Ab
 import { OptimismGovernorV4_0x8518Abi } from "./abis/OptimismGovernorV4_0x8518Abi";
 import { OptimismGovernorV5_0x160bAbi } from "./abis/OptimismGovernorV5_0x160bAbi";
 import { OptimismGovernorV6_0x0c01Abi } from "./abis/OptimismGovernorV6_0x0c01Abi";
+import { GovernanceTokenAbi } from "./abis/GovernanceTokenAbi";
 
 export default createConfig({
   networks: {
@@ -26,5 +27,11 @@ export default createConfig({
       network: "optimism",
       startBlock: 112131709,
     },
+		GovernanceToken: {
+			abi: GovernanceTokenAbi,
+			address: "0x4200000000000000000000000000000000000042",
+			network: "optimism",
+			startBlock: 1, // CHANGE START BLOCK
+		},
   },
 });
