@@ -4,7 +4,6 @@ export default createSchema((p) => ({
   Delegate: p.createTable({
     id: p.string(),
     address: p.string(),
-    ensName: p.string().optional(),
     votingPower: p.bigint(),
     votes: p.many("Vote.delegateId"),
   }),

@@ -11,32 +11,15 @@ ponder.on(
       event.args.newBalance
     );
 
-    interface QueryResponse {
-      address: `0x${string}`;
-      name: `${string}.eth` | null;
-      displayName: string;
-      avatar: string | null;
-    }
-    const url = `https://api.ensideas.com/ens/resolve/${event.args.delegate}`;
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const ensInfo = (await res.json()) as QueryResponse;
-
     const { Delegate } = context.db;
     await Delegate.upsert({
       id: event.args.delegate,
       create: {
         address: event.args.delegate,
         votingPower: event.args.newBalance,
-        ensName: ensInfo.name ?? undefined,
       },
       update: {
         votingPower: event.args.newBalance,
-        ensName: ensInfo.name ?? undefined,
       },
     });
   }
