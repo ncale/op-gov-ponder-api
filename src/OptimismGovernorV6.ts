@@ -3,24 +3,25 @@ import { ponder } from "@/generated";
 ponder.on("OptimismGovernorV6:VoteCast", async ({ event, context }) => {
   console.log("event: VoteCast", event.args.voter, event.args.proposalId);
   const { Delegate, Vote } = context.db;
+  const delegateAddress = event.args.voter.toLowerCase();
   await Delegate.upsert({
-    id: event.args.voter,
+    id: delegateAddress,
     create: {
-      address: event.args.voter,
+      address: delegateAddress,
     },
     update: {
-      address: event.args.voter,
+      address: delegateAddress,
     },
   });
   await Vote.upsert({
     id: event.transaction.hash,
     create: {
-      delegateId: event.args.voter,
+      delegateId: delegateAddress,
       proposalId: event.args.proposalId,
       blockNum: event.transaction.blockNumber,
     },
     update: {
-      delegateId: event.args.voter,
+      delegateId: delegateAddress,
       proposalId: event.args.proposalId,
       blockNum: event.transaction.blockNumber,
     },
@@ -32,24 +33,25 @@ ponder.on(
   async ({ event, context }) => {
     console.log("event: VoteCast", event.args.voter, event.args.proposalId);
     const { Delegate, Vote } = context.db;
+    const delegateAddress = event.args.voter.toLowerCase();
     await Delegate.upsert({
-      id: event.args.voter,
+      id: delegateAddress,
       create: {
-        address: event.args.voter,
+        address: delegateAddress,
       },
       update: {
-        address: event.args.voter,
+        address: delegateAddress,
       },
     });
     await Vote.upsert({
       id: event.transaction.hash,
       create: {
-        delegateId: event.args.voter,
+        delegateId: delegateAddress,
         proposalId: event.args.proposalId,
         blockNum: event.transaction.blockNumber,
       },
       update: {
-        delegateId: event.args.voter,
+        delegateId: delegateAddress,
         proposalId: event.args.proposalId,
         blockNum: event.transaction.blockNumber,
       },
