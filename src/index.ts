@@ -1,5 +1,23 @@
 import { ponder } from "@/generated";
 
+ponder.on(
+  "GovernanceToken:DelegateVotesChanged",
+  async ({ event, context }) => {
+    console.log(event.args);
+    const { Delegate } = context.db;
+    const delegateAddress = event.args.delegate.toLowerCase();
+    await Delegate.upsert({
+      id: delegateAddress,
+      create: {
+        address: delegateAddress,
+      },
+      update: {
+        address: delegateAddress,
+      },
+    });
+  }
+);
+
 ponder.on("OptimismGovernorV6:VoteCast", async ({ event, context }) => {
   console.log("event: VoteCast", event.args.voter, event.args.proposalId);
   const { Delegate, Vote } = context.db;
