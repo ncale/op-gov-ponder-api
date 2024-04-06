@@ -11,5 +11,6 @@ export default createSchema((p) => ({
     delegateId: p.string().references("Delegate.id"),
     proposalId: p.bigint(),
     blockNum: p.bigint(),
+    withReason: p.boolean(),
   }),
 }));

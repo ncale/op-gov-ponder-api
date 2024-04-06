@@ -19,11 +19,13 @@ ponder.on("OptimismGovernorV6:VoteCast", async ({ event, context }) => {
       delegateId: delegateAddress,
       proposalId: event.args.proposalId,
       blockNum: event.transaction.blockNumber,
+      withReason: !!event.args.reason,
     },
     update: {
       delegateId: delegateAddress,
       proposalId: event.args.proposalId,
       blockNum: event.transaction.blockNumber,
+      withReason: !!event.args.reason,
     },
   });
 });
@@ -49,11 +51,13 @@ ponder.on(
         delegateId: delegateAddress,
         proposalId: event.args.proposalId,
         blockNum: event.transaction.blockNumber,
+        withReason: !!event.args.reason,
       },
       update: {
         delegateId: delegateAddress,
         proposalId: event.args.proposalId,
         blockNum: event.transaction.blockNumber,
+        withReason: !!event.args.reason,
       },
     });
   }
