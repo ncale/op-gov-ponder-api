@@ -10,9 +10,11 @@ ponder.on(
       id: delegateAddress,
       create: {
         address: delegateAddress,
+        votingPower: event.args.newBalance,
       },
       update: {
         address: delegateAddress,
+        votingPower: event.args.newBalance,
       },
     });
   }
@@ -26,6 +28,7 @@ ponder.on("OptimismGovernorV6:VoteCast", async ({ event, context }) => {
     id: delegateAddress,
     create: {
       address: delegateAddress,
+      votingPower: BigInt(0),
     },
     update: {
       address: delegateAddress,
@@ -58,6 +61,7 @@ ponder.on(
       id: delegateAddress,
       create: {
         address: delegateAddress,
+        votingPower: BigInt(0),
       },
       update: {
         address: delegateAddress,
