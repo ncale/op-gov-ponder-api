@@ -1,39 +1,51 @@
 import { ponder } from "@/generated";
+import { getEnsData } from "./getEnsData";
 
 ponder.on(
   "GovernanceToken:DelegateVotesChanged",
   async ({ event, context }) => {
-    console.log(event.args);
-    const { Delegate } = context.db;
+    console.log(
+      "Event: DelegateVotesChanged",
+      event.args.delegate,
+      event.args.newBalance
+    );
+
     const delegateAddress = event.args.delegate.toLowerCase();
-    await Delegate.upsert({
+    const { Delegate } = context.db;
+
+    const delegate = await Delegate.findUnique({
       id: delegateAddress,
-      create: {
-        address: delegateAddress,
-        votingPower: event.args.newBalance,
-      },
-      update: {
-        address: delegateAddress,
-        votingPower: event.args.newBalance,
-      },
     });
+
+    if (delegate) {
+      await Delegate.update({
+        id: delegateAddress,
+        data: {
+          votingPower: event.args.newBalance,
+        },
+      });
+    } else {
+      const { client } = context;
+      const { primaryName, avatar } = await getEnsData(client, delegateAddress);
+      await Delegate.create({
+        id: delegateAddress,
+        data: {
+          address: delegateAddress,
+          votingPower: event.args.newBalance,
+          ensName: primaryName ? primaryName : undefined,
+          ensAvatar: avatar ? avatar : undefined,
+        },
+      });
+    }
   }
 );
 
 ponder.on("OptimismGovernorV6:VoteCast", async ({ event, context }) => {
   console.log("event: VoteCast", event.args.voter, event.args.proposalId);
-  const { Delegate, Vote } = context.db;
+
   const delegateAddress = event.args.voter.toLowerCase();
-  await Delegate.upsert({
-    id: delegateAddress,
-    create: {
-      address: delegateAddress,
-      votingPower: BigInt(0),
-    },
-    update: {
-      address: delegateAddress,
-    },
-  });
+  const { Vote } = context.db;
+
   await Vote.upsert({
     id: event.transaction.hash,
     create: {
@@ -55,18 +67,10 @@ ponder.on(
   "OptimismGovernorV6:VoteCastWithParams",
   async ({ event, context }) => {
     console.log("event: VoteCast", event.args.voter, event.args.proposalId);
-    const { Delegate, Vote } = context.db;
+
     const delegateAddress = event.args.voter.toLowerCase();
-    await Delegate.upsert({
-      id: delegateAddress,
-      create: {
-        address: delegateAddress,
-        votingPower: BigInt(0),
-      },
-      update: {
-        address: delegateAddress,
-      },
-    });
+    const { Vote } = context.db;
+
     await Vote.upsert({
       id: event.transaction.hash,
       create: {
