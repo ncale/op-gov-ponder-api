@@ -32,6 +32,7 @@ export default createConfig({
       address: "0x4200000000000000000000000000000000000042",
       network: "optimism",
       startBlock: 6490467,
+      maxBlockRange: 2000,
     },
   },
 });
