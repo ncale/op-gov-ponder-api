@@ -1,44 +1,36 @@
 import { Address } from "viem";
 
-async function resolveEns(address: string): Promise<EnsIdeasData> {
-  const urlBase = "https://api.ensideas.com/ens/resolve";
-  const url = `${urlBase}/${address}`; // address can be in checksum
+async function resolveEns(address: string): Promise<EnsDataResponse> {
+  const urlBase = "https://ensdata.net";
+  const url = `${urlBase}/${address}`;
   const res = await fetch(url, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
-  return (await res.json()) as EnsIdeasData;
+  return (await res.json()) as EnsDataResponse;
 }
-type EnsIdeasData = {
-  address: Address;
-  name: string | null;
-  displayName: string;
-  avatar: string | null;
+type EnsDataResponse = {
+  error?: boolean; // only when '404 not found'
+  status?: number; // only when '404 not found'
+  message?: string; // only when '404 not found'
+  address?: string; // only when '200 found'
+  ens_primary?: string; // only when '200 found'
+  avatar_small?: string; // only when '200 found' and avatar exists
 };
-
-async function verifyAvatarExists(avatarUrl: string): Promise<boolean> {
-  const res = await fetch(avatarUrl, { method: "GET" });
-  if (res.status === 200) {
-    return true;
-  }
-  return false;
-}
 
 export async function getEnsData(
   address: string
 ): Promise<{ primaryName: string | null; avatar: string | null }> {
   try {
     const ensData = await resolveEns(address);
-    if (!ensData.name || !ensData.avatar)
-      return { primaryName: null, avatar: null };
-    const primaryName: string | null = ensData.name;
-    const avatarExists = await verifyAvatarExists(ensData.avatar);
-    if (avatarExists) {
-      const avatar: string | null = ensData.avatar;
-      return { primaryName, avatar };
-    } else {
-      return { primaryName, avatar: null };
+    if (ensData.error) {
+      console.log(
+        `Error resolving ENS Name\nstatus: ${ensData.status}\nmessage: ${ensData.message}`
+      );
     }
+    const primaryName = ensData.ens_primary ? ensData.ens_primary : null;
+    const avatar = ensData.avatar_small ? ensData.avatar_small : null;
+    return { primaryName, avatar };
   } catch (error) {
     console.log(`Error resolving ENS Name or Avatar for ${address}: ${error}`);
     return { primaryName: null, avatar: null };
