@@ -1,5 +1,6 @@
 import { ponder } from "@/generated";
 import { getEnsData } from "./getEnsData";
+import { Address } from "viem";
 
 ponder.on(
   "GovernanceToken:DelegateVotesChanged",
@@ -10,7 +11,7 @@ ponder.on(
       event.args.newBalance
     );
 
-    const delegateAddress = event.args.delegate.toLowerCase();
+    const delegateAddress = event.args.delegate.toLowerCase() as Address;
     const { Delegate } = context.db;
 
     const delegate = await Delegate.findUnique({
@@ -42,7 +43,7 @@ ponder.on(
 ponder.on("OptimismGovernorV6:VoteCast", async ({ event, context }) => {
   console.log("event: VoteCast", event.args.voter, event.args.proposalId);
 
-  const delegateAddress = event.args.voter.toLowerCase();
+  const delegateAddress = event.args.voter.toLowerCase() as Address;
   const { Vote } = context.db;
 
   await Vote.upsert({
@@ -67,7 +68,7 @@ ponder.on(
   async ({ event, context }) => {
     console.log("event: VoteCast", event.args.voter, event.args.proposalId);
 
-    const delegateAddress = event.args.voter.toLowerCase();
+    const delegateAddress = event.args.voter.toLowerCase() as Address;
     const { Vote } = context.db;
 
     await Vote.upsert({

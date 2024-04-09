@@ -1,6 +1,6 @@
 import { Address } from "viem";
 
-async function resolveEns(address: string): Promise<EnsDataResponse> {
+async function resolveEns(address: Address): Promise<EnsDataResponse> {
   const urlBase = "https://ensdata.net";
   const url = `${urlBase}/${address}`;
   const res = await fetch(url, {
@@ -13,13 +13,13 @@ type EnsDataResponse = {
   error?: boolean; // only when '404 not found'
   status?: number; // only when '404 not found'
   message?: string; // only when '404 not found'
-  address?: string; // only when '200 found'
+  address?: Address; // only when '200 found'
   ens_primary?: string; // only when '200 found'
   avatar_small?: string; // only when '200 found' and avatar exists
 };
 
 export async function getEnsData(
-  address: string
+  address: Address
 ): Promise<{ primaryName: string | null; avatar: string | null }> {
   try {
     const ensData = await resolveEns(address);
