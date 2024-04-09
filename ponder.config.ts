@@ -11,7 +11,12 @@ import { GovernanceTokenAbi } from "./abis/GovernanceTokenAbi";
 
 export default createConfig({
   networks: {
-    optimism: { chainId: 10, transport: http(process.env.PONDER_RPC_URL_10) },
+    optimism: {
+      chainId: 10,
+      transport: http(process.env.PONDER_RPC_URL_10),
+      pollingInterval: 3_000,
+      maxRequestsPerSecond: 40,
+    },
   },
   contracts: {
     OptimismGovernorV6: {
