@@ -4,6 +4,9 @@ export default createSchema((p) => ({
   Delegate: p.createTable({
     id: p.string(),
     address: p.string(),
+    votingPower: p.bigint(),
+    ensName: p.string().optional(),
+    ensAvatar: p.string().optional(),
     votes: p.many("Vote.delegateId"),
   }),
   Vote: p.createTable({
@@ -11,5 +14,6 @@ export default createSchema((p) => ({
     delegateId: p.string().references("Delegate.id"),
     proposalId: p.bigint(),
     blockNum: p.bigint(),
+    withReason: p.boolean(),
   }),
 }));
