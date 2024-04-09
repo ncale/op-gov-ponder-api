@@ -25,8 +25,7 @@ ponder.on(
         },
       });
     } else {
-      const { client } = context;
-      const { primaryName, avatar } = await getEnsData(client, delegateAddress);
+      const { primaryName, avatar } = await getEnsData(delegateAddress);
       await Delegate.create({
         id: delegateAddress,
         data: {
