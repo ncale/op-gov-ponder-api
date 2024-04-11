@@ -36,7 +36,7 @@ export default createConfig({
       abi: GovernanceTokenAbi,
       address: "0x4200000000000000000000000000000000000042",
       network: "optimism",
-      startBlock: 112131709, // 6490467
+      startBlock: 114636709, // 6490467
       maxBlockRange: 2000,
     },
   },
