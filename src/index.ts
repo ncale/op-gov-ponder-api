@@ -25,10 +25,25 @@ for (const eventName of proposalCreatedEvents) {
         against: BigInt(0),
         abstain: BigInt(0),
         canceled: false,
+        executed: false,
       },
     });
   });
 }
+
+ponder.on("OptimismGovernorV6:ProposalExecuted", async ({ event, context }) => {
+  const { proposalId } = event.args;
+  logger.trace("Event: ProposalExecuted", event.args.proposalId);
+  const { Proposal } = context.db;
+  await Proposal.update({
+    id: proposalId,
+    data: ({ current }) => {
+      return {
+        executed: true,
+      };
+    },
+  });
+});
 
 ponder.on("OptimismGovernorV6:ProposalCanceled", async ({ event, context }) => {
   const { proposalId } = event.args;
