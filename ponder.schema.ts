@@ -26,5 +26,6 @@ export default createSchema((p) => ({
     abstain: p.bigint(),
     startBlock: p.bigint(),
     endBlock: p.bigint(),
+    canceled: p.boolean(),
   }),
 }));
