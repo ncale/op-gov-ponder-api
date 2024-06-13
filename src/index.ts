@@ -139,8 +139,8 @@ ponder.on(
         data: {
           address: delegateAddress,
           votingPower: event.args.newBalance,
-          ensName: primaryName ? primaryName : undefined,
-          ensAvatar: avatar ? avatar : undefined,
+          ensName: primaryName || undefined,
+          ensAvatar: avatar || undefined,
         },
       });
     }
