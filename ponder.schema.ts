@@ -24,5 +24,7 @@ export default createSchema((p) => ({
     for: p.bigint(),
     against: p.bigint(),
     abstain: p.bigint(),
+    startBlock: p.bigint(),
+    endBlock: p.bigint(),
   }),
 }));

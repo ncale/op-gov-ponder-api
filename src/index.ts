@@ -57,6 +57,8 @@ for (const eventName of proposalCreatedEvents) {
       data: {
         proposer: event.args.proposer,
         description: event.args.description,
+        startBlock: event.args.startBlock,
+        endBlock: event.args.endBlock,
         for: BigInt(0),
         against: BigInt(0),
         abstain: BigInt(0),
