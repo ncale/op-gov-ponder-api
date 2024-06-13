@@ -30,7 +30,8 @@ export default createConfig({
       ]),
       address: "0xcdf27f107725988f2261ce2256bdfcde8b382b10",
       network: "optimism",
-      startBlock: 112131709,
+      // startBlock: 112131709,
+      startBlock: 71801427,
     },
     GovernanceToken: {
       abi: GovernanceTokenAbi,

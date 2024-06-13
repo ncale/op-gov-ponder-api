@@ -12,8 +12,17 @@ export default createSchema((p) => ({
   Vote: p.createTable({
     id: p.hex(),
     delegateId: p.hex().references("Delegate.id"),
-    proposalId: p.bigint(),
+    proposalId: p.bigint().references("Proposal.id"),
     blockNum: p.bigint(),
     withReason: p.boolean(),
+  }),
+  Proposal: p.createTable({
+    id: p.bigint(),
+    proposer: p.hex(),
+    description: p.string(),
+    votes: p.many("Vote.proposalId"),
+    for: p.bigint(),
+    against: p.bigint(),
+    abstain: p.bigint(),
   }),
 }));
