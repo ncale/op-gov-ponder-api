@@ -1,3 +1,12 @@
 {
-  "extends": "ponder"
+  "extends": "ponder",
+  "rules": { "no-console": "error" },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parserOptions": {
+        "project": ["./tsconfig.json"]
+      }
+    }
+  ]
 }

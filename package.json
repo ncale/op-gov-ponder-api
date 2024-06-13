@@ -8,16 +8,21 @@
     "start": "ponder start",
     "codegen": "ponder codegen",
     "lint": "eslint .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "test": "yarn lint && yarn typecheck"
   },
   "dependencies": {
     "@ponder/core": "^0.4.32",
+    "pino": "^9.2.0",
+    "pino-pretty": "^11.2.1",
     "viem": "^1.19.3"
   },
   "devDependencies": {
     "@types/node": "^20.9.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
     "eslint": "^8.53.0",
-    "eslint-config-ponder": "^0.3.3",
+    "eslint-config-ponder": "^0.4.36",
     "typescript": "^5.2.2"
   },
   "engines": {

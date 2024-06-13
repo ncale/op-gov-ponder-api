@@ -1,38 +1,41 @@
 import { Address } from "viem";
+import { logger } from "./logger";
 
 async function resolveEns(address: Address): Promise<EnsDataResponse> {
   const urlBase = "https://ensdata.net";
   const url = `${urlBase}/${address}`;
-  const res = await fetch(url, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  return (await res.json()) as EnsDataResponse;
+  return fetch(url).then((res) => res.json() as Promise<EnsDataResponse>);
 }
-type EnsDataResponse = {
-  error?: boolean; // only when '404 not found'
-  status?: number; // only when '404 not found'
-  message?: string; // only when '404 not found'
-  address?: Address; // only when '200 found'
-  ens_primary?: string; // only when '200 found'
-  avatar_small?: string; // only when '200 found' and avatar exists
-};
+type EnsDataResponse =
+  | {
+      // only when '404 not found'
+      error: boolean;
+      status: number;
+      message: string;
+    }
+  | {
+      // only when '200 found'
+      address: Address;
+      ens_primary: string;
+      avatar_small?: string; // only when '200 found' and avatar exists
+    };
 
 export async function getEnsData(
   address: Address
 ): Promise<{ primaryName: string | null; avatar: string | null }> {
   try {
     const ensData = await resolveEns(address);
-    if (ensData.error) {
-      console.log(
+    if ("error" in ensData) {
+      logger.warn(
         `Error resolving ENS Name\nstatus: ${ensData.status}\nmessage: ${ensData.message}`
       );
+      return { primaryName: null, avatar: null };
     }
-    const primaryName = ensData.ens_primary ? ensData.ens_primary : null;
-    const avatar = ensData.avatar_small ? ensData.avatar_small : null;
-    return { primaryName, avatar };
+    const primaryName = ensData.ens_primary;
+    const avatar = ensData.avatar_small;
+    return { primaryName, avatar: avatar || null };
   } catch (error) {
-    console.log(`Error resolving ENS Name or Avatar for ${address}: ${error}`);
+    logger.error(`Error resolving ENS Name or Avatar for ${address}: ${error}`);
     return { primaryName: null, avatar: null };
   }
 }
