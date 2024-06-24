@@ -1,6 +1,6 @@
 import { EventNames, ponder } from "@/generated";
-import { getEnsData } from "./getEnsData";
 import { Address } from "viem";
+import { getEnsData } from "./getEnsData";
 import { logger } from "./logger";
 
 const proposalCreatedEvents = [
@@ -21,9 +21,6 @@ for (const eventName of proposalCreatedEvents) {
         description: event.args.description,
         startBlock: event.args.startBlock,
         endBlock: event.args.endBlock,
-        for: BigInt(0),
-        against: BigInt(0),
-        abstain: BigInt(0),
         canceled: false,
         executed: false,
       },
@@ -88,39 +85,31 @@ for (const eventName of voteCastEvents) {
     const { Vote } = context.db;
     const { Proposal } = context.db;
 
-    await Vote.upsert({
-      id: event.transaction.hash,
-      create: {
-        delegateId: delegateAddress,
-        proposalId: event.args.proposalId,
-        blockNum: event.transaction.blockNumber,
-        withReason: !!event.args?.reason,
-      },
-      update: {
-        delegateId: delegateAddress,
-        proposalId: event.args.proposalId,
-        blockNum: event.transaction.blockNumber,
-        withReason: !!event.args.reason,
-      },
+    const proposal = await Proposal.findUnique({
+      id: event.args.proposalId,
     });
 
-    await Proposal.update({
-      id: event.args.proposalId,
-      data: ({ current }) => {
-        return {
-          // 0
-          against:
-            current.against +
-            (event.args.support === 0 ? BigInt(1) : BigInt(0)),
-          // 1
-          for: current.for + (event.args.support === 1 ? BigInt(1) : BigInt(0)),
-          // 2
-          abstain:
-            current.abstain +
-            (event.args.support === 2 ? BigInt(1) : BigInt(0)),
-        };
-      },
-    });
+    // if proposal doesn't exist, skip entirely
+    if (!proposal) {
+      return;
+    }
+    await Promise.all([
+      Vote.upsert({
+        id: event.transaction.hash,
+        create: {
+          delegateId: delegateAddress,
+          proposalId: event.args.proposalId,
+          blockNum: event.transaction.blockNumber,
+          withReason: !!event.args?.reason,
+        },
+        update: {
+          delegateId: delegateAddress,
+          proposalId: event.args.proposalId,
+          blockNum: event.transaction.blockNumber,
+          withReason: !!event.args.reason,
+        },
+      }),
+    ]);
   });
 }
 
