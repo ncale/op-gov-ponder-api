@@ -1,12 +1,13 @@
 import { createConfig, mergeAbis } from "@ponder/core";
+import "dotenv/config";
 import { http } from "viem";
 
+import { OptimismGovernorV6_0x0c01Abi } from "./abis/OptimismGovernorV6_0x0c01Abi";
 import { TransparentUpgradeableProxyAbi } from "./abis/TransparentUpgradeableProxyAbi";
 import { OptimismGovernorV1_0x9d66Abi } from "./abis/OptimismGovernorV1_0x9d66Abi";
 import { OptimismGovernorV2_0x0457Abi } from "./abis/OptimismGovernorV2_0x0457Abi";
 import { OptimismGovernorV4_0x8518Abi } from "./abis/OptimismGovernorV4_0x8518Abi";
 import { OptimismGovernorV5_0x160bAbi } from "./abis/OptimismGovernorV5_0x160bAbi";
-import { OptimismGovernorV6_0x0c01Abi } from "./abis/OptimismGovernorV6_0x0c01Abi";
 import { GovernanceTokenAbi } from "./abis/GovernanceTokenAbi";
 
 export default createConfig({
@@ -14,8 +15,6 @@ export default createConfig({
     optimism: {
       chainId: 10,
       transport: http(process.env.PONDER_RPC_URL_10),
-      pollingInterval: 3_000,
-      maxRequestsPerSecond: 40,
     },
   },
   contracts: {
@@ -38,7 +37,6 @@ export default createConfig({
       address: "0x4200000000000000000000000000000000000042",
       network: "optimism",
       startBlock: 114636709, // 6490467
-      maxBlockRange: 2000,
     },
   },
 });
